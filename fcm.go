@@ -39,6 +39,7 @@ var (
 type FcmClient struct {
 	ApiKey  string
 	Message FcmMsg
+	Client  *http.Client
 }
 
 // FcmMsg represents fcm request message
@@ -91,6 +92,7 @@ type NotificationPayload struct {
 func NewFcmClient(apiKey string) *FcmClient {
 	fcmc := new(FcmClient)
 	fcmc.ApiKey = apiKey
+	fcmc.Client = &http.Client{}
 
 	return fcmc
 }
@@ -108,6 +110,12 @@ func (this *FcmClient) NewFcmMsgTo(to string, body interface{}) *FcmClient {
 	this.Message.To = to
 	this.Message.Data = body
 
+	return this
+}
+
+// SetHTTPClient sets HTTP client to use when sending
+func (this *FcmClient) SetHTTPClient(c *http.Client) *FcmClient {
+	this.Client = c
 	return this
 }
 
